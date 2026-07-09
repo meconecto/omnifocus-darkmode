@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         OmniFocus Web — Modo Oscuro
 @namespace    github.com/meconecto/omnifocus-darkmode
-@version      1.3.1
+@version      1.3.2
 @description  Modo oscuro para OmniFocus for the Web. Solo CSS: por diseño no puede exfiltrar tus datos.
 @author       meconecto
 @license      MIT
@@ -34,11 +34,11 @@
  *
  * AJUSTES
  * -------
- * --of-darkness : cuánto se oscurece (1 = negro puro, más duro). Bajalo (0.85–0.92)
- *                 para un gris más suave. El fondo, texto y scrollbar acompañan.
- *                 0.85 ≈ el brillo del fondo oscuro de claude.ai (~#262624).
- * --of-warmth   : tibieza del fondo (sepia). 0 = gris neutro; 0.08 ≈ tono cálido
- *                 tipo claude.ai. Subilo para más ámbar (tiñe también los colores).
+ * --of-darkness : cuánto se oscurece (1 = negro puro, más duro). Bajalo para un
+ *                 gris más suave. 0.88 → fondo #1f1f1f, calcado del de claude.ai
+ *                 (medido: #1f1e1e). El texto y el scrollbar acompañan.
+ * --of-warmth   : tibieza del fondo (sepia). 0 = gris neutro (como claude.ai).
+ *                 Subilo (~0.04) para un tono cálido; mucho tiñe también los colores.
  * COUNTER_INVERT: la lista de selectores re-invertidos (el bloque de abajo). Si
  *                 algún ícono/imagen queda en negativo, agregá o quitá un selector.
  */
@@ -50,9 +50,9 @@
     color-scheme: light;
 
     /* --- Ajustes principales --- */
-    --of-darkness: 0.85;     /* 0.85–1.0; 0.85 ≈ fondo de claude.ai */
+    --of-darkness: 0.88;     /* 0.85–1.0; 0.88 → fondo #1f1f1f, calcado del de claude.ai (#1f1e1e) */
     --of-hue: 180deg;        /* rota el tono para preservar los colores */
-    --of-warmth: 0;          /* sepia: 0 = neutro; ~0.04 = cálido sutil tipo claude.ai */
+    --of-warmth: 0;          /* sepia: 0 = neutro (como claude.ai); subilo para tono cálido */
   }
 
   /* Inversión base + rotación de tono + tibieza. Fondo #fff → se invierte a
