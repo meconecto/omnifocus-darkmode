@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         OmniFocus Web — Modo Oscuro
 @namespace    github.com/meconecto/omnifocus-darkmode
-@version      1.1.0
+@version      1.2.0
 @description  Modo oscuro para OmniFocus for the Web. Solo CSS: por diseño no puede exfiltrar tus datos.
 @author       meconecto
 @license      MIT
@@ -18,18 +18,24 @@
  * modo oscuro robusto que NO dependa de esas clases, invertimos toda la página y
  * rotamos el tono 180° (los colores —etiquetas, banderas, links— conservan su
  * matiz en vez de verse "en negativo"), y luego re-invertimos imágenes, video e
- * íconos para que se vean normales.
+ * íconos para que se vean normales. (OmniFocus web no tiene modo oscuro nativo:
+ * ignora prefers-color-scheme, siempre renderiza claro — por eso lo invertimos.)
+ *
+ * CLAVE DE LA TÉCNICA: como TODO está invertido, para que algo se vea OSCURO hay
+ * que darle un color CLARO (el invert lo oscurece). Por eso el fondo de la página
+ * es #fff (se invierte a casi-negro) y el scrollbar se pinta con valores claros.
+ * Y color-scheme es 'light' (no 'dark'): así el navegador pinta los controles de
+ * formulario claros y la inversión los lleva a oscuro.
  *
  * PRIVACIDAD
  * ----------
  * Stylus es un gestor de CSS: no ejecuta JavaScript. Este estilo es incapaz de
  * hacer red o de leer tus tareas. La garantía es estructural, no una promesa.
  *
- * AJUSTES (editá las variables de :root, más abajo)
+ * AJUSTES
  * -------
- * --of-darkness : cuánto se oscurece (1 = inversión total). Bajalo (ej. 0.92) si
- *                 el gris te resulta muy duro.
- * --of-bg       : color de fondo real detrás de la app.
+ * --of-darkness : cuánto se oscurece (1 = negro puro, más duro). Bajalo (0.85–0.92)
+ *                 para un gris más suave. El fondo, texto y scrollbar acompañan.
  * COUNTER_INVERT: la lista de selectores re-invertidos (el bloque de abajo). Si
  *                 algún ícono/imagen queda en negativo, agregá o quitá un selector.
  */
@@ -37,28 +43,43 @@
 @-moz-document domain("web.omnifocus.com") {
 
   :root {
-    /* IMPORTANTE: 'light', no 'dark'. Con inversión global queremos que el
-       navegador pinte los controles nativos (inputs, textareas, scrollbars) en
-       CLARO, para que el invert() los lleve a oscuro. Con 'dark' se pintaban
-       oscuros y el invert los volvía cajas blancas. */
+    /* 'light' a propósito: ver nota de arriba. */
     color-scheme: light;
 
-    /* --- Ajustes --- */
-    --of-darkness: 0.92;     /* 0.90–1.0 recomendado; 1 = negro puro (más duro) */
+    /* --- Ajuste principal --- */
+    --of-darkness: 0.88;     /* 0.85–1.0; más bajo = gris más suave */
     --of-hue: 180deg;        /* rota el tono para preservar los colores */
-    --of-bg: #1d1d1d;
   }
 
-  /* Inversión base + rotación de tono para conservar los colores */
+  /* Inversión base + rotación de tono. Fondo #fff → se invierte a casi-negro
+     (sin costuras con el contenido blanco de la app, que se invierte igual). */
   html {
     filter: invert(var(--of-darkness)) hue-rotate(var(--of-hue));
-    background-color: var(--of-bg) !important;
+    background: #fff !important;
   }
-
-  /* Fondo real detrás de la app (por si la inversión deja bordes claros) */
   html,
   body {
-    background-color: var(--of-bg) !important;
+    background: #fff !important;
+  }
+
+  /* Scrollbars: el filtro SÍ invierte los scrollbars internos, así que los
+     pintamos con valores CLAROS para que queden oscuros. */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #fff;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #b8b8b8;      /* → gris oscuro tras la inversión */
+    border-radius: 6px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
+  }
+  ::-webkit-scrollbar-corner {
+    background: #fff;
   }
 
   /* Contra-inversión: imágenes, video e íconos vuelven a su color normal */
