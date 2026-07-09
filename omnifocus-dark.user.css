@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name         OmniFocus Web — Modo Oscuro
 @namespace    github.com/meconecto/omnifocus-darkmode
-@version      1.0.0
+@version      1.1.0
 @description  Modo oscuro para OmniFocus for the Web. Solo CSS: por diseño no puede exfiltrar tus datos.
 @author       meconecto
 @license      MIT
@@ -37,10 +37,14 @@
 @-moz-document domain("web.omnifocus.com") {
 
   :root {
-    color-scheme: dark;
+    /* IMPORTANTE: 'light', no 'dark'. Con inversión global queremos que el
+       navegador pinte los controles nativos (inputs, textareas, scrollbars) en
+       CLARO, para que el invert() los lleve a oscuro. Con 'dark' se pintaban
+       oscuros y el invert los volvía cajas blancas. */
+    color-scheme: light;
 
     /* --- Ajustes --- */
-    --of-darkness: 1;        /* 0.90–1.0 recomendado */
+    --of-darkness: 0.92;     /* 0.90–1.0 recomendado; 1 = negro puro (más duro) */
     --of-hue: 180deg;        /* rota el tono para preservar los colores */
     --of-bg: #1d1d1d;
   }
