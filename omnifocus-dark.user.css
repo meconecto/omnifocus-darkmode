@@ -1,0 +1,71 @@
+/* ==UserStyle==
+@name         OmniFocus Web — Modo Oscuro
+@namespace    github.com/meconecto/omnifocus-darkmode
+@version      1.0.0
+@description  Modo oscuro para OmniFocus for the Web. Solo CSS: por diseño no puede exfiltrar tus datos.
+@author       meconecto
+@license      MIT
+@homepageURL  https://github.com/meconecto/omnifocus-darkmode
+@supportURL   https://github.com/meconecto/omnifocus-darkmode/issues
+@updateURL    https://raw.githubusercontent.com/meconecto/omnifocus-darkmode/main/omnifocus-dark.user.css
+==/UserStyle== */
+
+/*
+ * ENFOQUE
+ * -------
+ * OmniFocus for the Web usa clases CSS hasheadas (styled-components) que cambian
+ * en cada build, así que apuntar a selectores concretos se rompe seguido. Para un
+ * modo oscuro robusto que NO dependa de esas clases, invertimos toda la página y
+ * rotamos el tono 180° (los colores —etiquetas, banderas, links— conservan su
+ * matiz en vez de verse "en negativo"), y luego re-invertimos imágenes, video e
+ * íconos para que se vean normales.
+ *
+ * PRIVACIDAD
+ * ----------
+ * Stylus es un gestor de CSS: no ejecuta JavaScript. Este estilo es incapaz de
+ * hacer red o de leer tus tareas. La garantía es estructural, no una promesa.
+ *
+ * AJUSTES (editá las variables de :root, más abajo)
+ * -------
+ * --of-darkness : cuánto se oscurece (1 = inversión total). Bajalo (ej. 0.92) si
+ *                 el gris te resulta muy duro.
+ * --of-bg       : color de fondo real detrás de la app.
+ * COUNTER_INVERT: la lista de selectores re-invertidos (el bloque de abajo). Si
+ *                 algún ícono/imagen queda en negativo, agregá o quitá un selector.
+ */
+
+@-moz-document domain("web.omnifocus.com") {
+
+  :root {
+    color-scheme: dark;
+
+    /* --- Ajustes --- */
+    --of-darkness: 1;        /* 0.90–1.0 recomendado */
+    --of-hue: 180deg;        /* rota el tono para preservar los colores */
+    --of-bg: #1d1d1d;
+  }
+
+  /* Inversión base + rotación de tono para conservar los colores */
+  html {
+    filter: invert(var(--of-darkness)) hue-rotate(var(--of-hue));
+    background-color: var(--of-bg) !important;
+  }
+
+  /* Fondo real detrás de la app (por si la inversión deja bordes claros) */
+  html,
+  body {
+    background-color: var(--of-bg) !important;
+  }
+
+  /* Contra-inversión: imágenes, video e íconos vuelven a su color normal */
+  img,
+  video,
+  svg,
+  canvas,
+  picture,
+  [style*="background-image"],
+  [class*="avatar"],
+  [class*="Avatar"] {
+    filter: invert(var(--of-darkness)) hue-rotate(var(--of-hue));
+  }
+}

@@ -1,37 +1,39 @@
 # omnifocus-darkmode
 
-Modo oscuro para **OmniFocus for the Web** (`https://web.omnifocus.com/`) mediante un userscript de Violentmonkey/Tampermonkey.
+Modo oscuro para **OmniFocus for the Web** (`https://web.omnifocus.com/`) mediante un estilo de **[Stylus](https://github.com/openstyles/stylus)**.
 
-## Por qué un userscript y no una extensión de modo oscuro
+## Por qué Stylus (y no una extensión de modo oscuro cualquiera)
 
-Este script es **solo CSS** y se declara con `@grant none`: no tiene ninguna capacidad de red (nada de `fetch`, `XHR` ni `GM_xmlhttpRequest`). Técnicamente **no puede sacar tus tareas de tu máquina**. Todo el código está acá, versionado y auditable — no hay actualizaciones silenciosas de terceros.
+El modo oscuro es **100% CSS**. Stylus es un gestor de *estilos*: **no ejecuta JavaScript**, así que el estilo **no tiene ninguna capacidad de red y es incapaz de leer o exfiltrar tus tareas** — la garantía es estructural, no una promesa. Además Stylus es open source (GPLv3) y nació como fork sin telemetría de "Stylish". Para datos sensibles como tus tareas, es lo más defendible. Todo el código está acá, versionado y auditable.
 
 ## Instalación
 
-1. Instalá el gestor de userscripts en tu navegador:
-   - [Violentmonkey](https://violentmonkey.github.io/) (recomendado, open source), o
-   - [Tampermonkey](https://www.tampermonkey.net/).
-2. Abrí el script para instalarlo:
-   [`omnifocus-dark.user.js`](https://raw.githubusercontent.com/meconecto/omnifocus-darkmode/main/omnifocus-dark.user.js)
-   El gestor detecta el `.user.js` y ofrece instalarlo.
+1. Instalá **[Stylus](https://github.com/openstyles/stylus)** desde la tienda de tu navegador.
+   > Ojo: es **Stylus** (de `openstyles`), **no** "Stylish" (el original con telemetría).
+2. Abrí el estilo para instalarlo:
+   [`omnifocus-dark.user.css`](https://raw.githubusercontent.com/meconecto/omnifocus-darkmode/main/omnifocus-dark.user.css)
+   Stylus detecta el formato UserCSS y ofrece instalarlo (con auto-update).
 3. Entrá a <https://web.omnifocus.com/>. Debería verse oscuro.
+
+Alternativa sin auto-update: en el dashboard de Stylus → **"Write new style"** → pegá el contenido de [`omnifocus-dark.user.css`](omnifocus-dark.user.css) → **Save**.
 
 ## Cómo funciona
 
 OmniFocus web usa clases CSS hasheadas (styled-components) que cambian en cada
 build, así que apuntar a selectores concretos se rompe seguido. Para que sea
-robusto, el script **invierte la página y rota el tono 180°** (los colores de
+robusto, se **invierte la página y se rota el tono 180°** (los colores de
 etiquetas, banderas y links conservan su matiz en vez de verse "en negativo") y
-luego **re-invierte imágenes, video e íconos** para que se vean normales.
+luego se **re-invierten imágenes, video e íconos** para que se vean normales.
 
 ## Ajustes
 
-En el propio `.user.js`:
+En el `.user.css`, dentro del bloque `:root`:
 
-- **`DARKNESS`** (default `1`): cuánto se oscurece. Bajalo a `0.92` para un gris menos duro.
-- **`COUNTER_INVERT`**: lista de elementos que se re-invierten para no verse en negativo. Si algún ícono/imagen queda mal, agregá o sacá un selector.
+- **`--of-darkness`** (default `1`): cuánto se oscurece. Bajalo a `0.92` para un gris menos duro.
+- **`--of-bg`**: color de fondo real detrás de la app.
+- **Lista de contra-inversión**: los selectores que se re-invierten para no verse en negativo. Si algún ícono/imagen queda mal, agregá o sacá un selector.
 
-Tras editar el archivo, reinstalá/actualizá el script en el gestor.
+Tras editar, guardá en Stylus (se aplica al instante).
 
 ## Limitaciones
 
