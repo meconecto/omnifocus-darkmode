@@ -2,7 +2,7 @@
 
 Modo oscuro para OmniFocus for the Web, como userstyle de Stylus: un único archivo CSS.
 
-<!-- verify: scripts\verificar-repo.cmd -->
+<!-- verify: scripts/verificar-repo.cmd -->
 
 ## Glosario
 
@@ -30,7 +30,9 @@ README iguales a los del `:root`) están en [docs/invariantes.md](docs/invariant
 
 ## Verificación
 
-Antes de dar algo por terminado, ejecutá `scripts\verificar-repo.cmd`.
+Antes de dar algo por terminado, ejecutá `scripts\verificar-repo.cmd` (en Linux o macOS,
+`bash scripts/verificar-repo.sh`). El marcador de arriba lo declara con barra normal a
+propósito: es la única forma que resuelve tanto en Windows como en el CI.
 
 Verifica la estructura del repositorio, no el CSS: **el resultado visual no se puede
 verificar automáticamente**. Cualquier cambio en `omnifocus-dark.user.css` hay que mirarlo
