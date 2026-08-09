@@ -1,0 +1,53 @@
+# CI solo invoca el comando canónico del proyecto. Toda la lógica vive en `verify`,
+# para que falle igual en local que acá.
+#
+# En Windows el comando declarado en AGENTS.md es `scripts\verificar-repo.cmd`; acá corre
+# ubuntu-latest, así que se invoca directamente el .sh que ese launcher envuelve.
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Un PR desde un fork trae código controlado por quien lo abrió, incluido el propio
+# `verify`. Por eso: sin secretos y solo lectura.
+# Nunca uses `pull_request_target` con checkout del código del PR: ahí sí hay secretos.
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Sin paso de setup: el proyecto es un único archivo CSS, sin dependencias.
+      - run: bash scripts/verificar-repo.sh
+
+  # Un PR que modifica las instrucciones de los agentes cambia el comportamiento de
+  # todo el que trabaje después sobre el repo.
+  #
+  # ESTE JOB SOLO AVISA. La revisión humana no se puede exigir desde un workflow:
+  # se exige con `.github/CODEOWNERS` MÁS una regla de protección de rama con
+  # "Require review from Code Owners" activado. Sin las dos cosas, este job es
+  # únicamente una alarma.
+  aviso-instrucciones-de-agentes:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Detectar cambios en instrucciones
+        run: |
+          cambios=$(git diff --name-only origin/${{ github.base_ref }}...HEAD \
+            -- AGENTS.md '**/AGENTS.md' CLAUDE.md GEMINI.md \
+               .github/copilot-instructions.md '.cursor/rules/**')
+          if [ -n "$cambios" ]; then
+            echo "::warning::Este PR modifica instrucciones de agentes:"
+            echo "$cambios"
+            echo "Revisión humana requerida antes de que un agente trabaje sobre esta rama."
+          fi

@@ -1,0 +1,10 @@
+# Marca de qué versión de la estructura tiene este proyecto.
+#
+# Existe para una sola cosa: que un procedimiento futuro sepa si acá ya hay estructura,
+# y de qué versión, en vez de tener que adivinarlo mirando qué archivos hay. Sin esto,
+# volver a correr una adopción sobre un proyecto ya adoptado pisa cosas en silencio.
+#
+# No lo edites a mano. Lo escribe el procedimiento de inicialización o de adopción.
+
+version: 1
+adoptada: 2026-08-09
