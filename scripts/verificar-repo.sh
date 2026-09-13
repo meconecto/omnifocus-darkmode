@@ -219,6 +219,65 @@ for f in CLAUDE.md GEMINI.md .cursor/rules/agents.mdc .github/copilot-instructio
 done
 [ "$adaptadores" -eq 0 ] && echo '  ok     ninguno configurado'
 
+# --- 10. Sin JavaScript -----------------------------------------------------
+# Invariante 1 / ADR 0002 y 0004: la garantia de no leer las tareas es la
+# ausencia de JS, no una promesa. Un .js en el repo (o un content script en el
+# adaptador Chromium) la elimina por completo.
+sec 'Sin JavaScript'
+js=$(archivos_del_repo | grep -E '\.(js|mjs|cjs)$' || true)
+if [ -n "$js" ]; then
+  while IFS= read -r f; do err "$f: el invariante 1 prohibe JavaScript"; done <<< "$js"
+else
+  echo '  ok     ningun .js / .mjs / .cjs'
+fi
+
+# --- 11. Adaptador Chromium -------------------------------------------------
+sec 'Adaptador Chromium'
+if [ -d extension ]; then
+  if [ ! -f scripts/sincronizar-extension.sh ]; then
+    err 'existe extension/ pero falta scripts/sincronizar-extension.sh'
+  elif bash scripts/sincronizar-extension.sh --check; then
+    :
+  else
+    errores=$((errores + 1))
+  fi
+
+  extra=$(find extension -type f \
+    ! -name 'manifest.json' ! -name 'omnifocus-dark.css' 2>/dev/null || true)
+  if [ -n "$extra" ]; then
+    while IFS= read -r f; do
+      err "$f: en extension/ solo pueden estar manifest.json y omnifocus-dark.css"
+    done <<< "$extra"
+  fi
+
+  if [ -f extension/manifest.json ]; then
+    if grep -q '"background"' extension/manifest.json; then
+      err 'extension/manifest.json declara background (implica JS)'
+    fi
+    if grep -q '"service_worker"' extension/manifest.json; then
+      err 'extension/manifest.json declara service_worker'
+    fi
+    if grep -q '"js"' extension/manifest.json; then
+      err 'extension/manifest.json declara content_scripts.js'
+    fi
+    if grep -qE '"permissions"|"host_permissions"|"optional_permissions"' \
+         extension/manifest.json; then
+      err 'extension/manifest.json declara permisos extra; alcanza con content_scripts.matches'
+    fi
+    if command -v python3 >/dev/null 2>&1; then
+      if python3 -m json.tool extension/manifest.json >/dev/null 2>&1; then
+        echo '  ok     extension/manifest.json es JSON valido'
+      else
+        err 'extension/manifest.json no es JSON valido'
+      fi
+    fi
+  else
+    err 'falta extension/manifest.json'
+  fi
+else
+  echo '  ok     sin extension/ (Stylus sigue siendo la via principal)'
+fi
+
 # --- Resumen ----------------------------------------------------------------
 printf '\n'
 if [ "$errores" -gt 0 ]; then

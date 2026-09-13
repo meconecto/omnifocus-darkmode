@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "OmniFocus Web — Modo Oscuro",
+  "version": "1.3.2",
+  "description": "Modo oscuro para OmniFocus for the Web. Solo CSS: por diseño no puede exfiltrar tus datos.",
+  "homepage_url": "https://github.com/meconecto/omnifocus-darkmode",
+  "content_scripts": [
+    {
+      "matches": ["https://web.omnifocus.com/*"],
+      "css": ["omnifocus-dark.css"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ]
+}

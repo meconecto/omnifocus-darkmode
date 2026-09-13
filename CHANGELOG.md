@@ -4,6 +4,14 @@ Versions refer to `@version` in `omnifocus-dark.user.css` — the value Stylus u
 decide whether to auto-update an installed copy. Reconstructed from the git history on
 2026-08-09; it only records what the commits show.
 
+## Adapter — 2026-09-13
+
+Not a Stylus `@version` bump (the userstyle is unchanged).
+
+- Optional CSS-only Chromium extension in `extension/` for local unpacked install in
+  Chrome/Brave. Same CSS as the userstyle; no JavaScript. Stylus remains the primary
+  distribution. ([ADR 0004](docs/decisiones/0004-extension-chromium-local-solo-css.md))
+
 ## 1.3.2 — 2026-07-09
 
 - `--of-darkness` back to `0.88`, calibrated so the background lands on `#1f1f1f`, matching

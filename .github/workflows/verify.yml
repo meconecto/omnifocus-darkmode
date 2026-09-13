@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Sin paso de setup: el proyecto es un único archivo CSS, sin dependencias.
+      # Sin paso de setup: CSS + manifest, sin dependencias.
       - run: bash scripts/verificar-repo.sh
 
   # Un PR que modifica las instrucciones de los agentes cambia el comportamiento de
