@@ -1,0 +1,97 @@
+/*
+ * GENERADO — no editar a mano.
+ * Fuente: omnifocus-dark.user.css
+ * Regenerar: bash scripts/sincronizar-extension.sh
+ *
+ * Hoja inyectada por la extension Chromium (Manifest V3) como content_script
+ * CSS. No hay JavaScript. El original para Stylus es omnifocus-dark.user.css.
+ * version 1.3.2
+ */
+
+/*
+ * ENFOQUE
+ * -------
+ * OmniFocus for the Web usa clases CSS hasheadas (styled-components) que cambian
+ * en cada build, así que apuntar a selectores concretos se rompe seguido. Para un
+ * modo oscuro robusto que NO dependa de esas clases, invertimos toda la página y
+ * rotamos el tono 180° (los colores —etiquetas, banderas, links— conservan su
+ * matiz en vez de verse "en negativo"), y luego re-invertimos imágenes, video e
+ * íconos para que se vean normales. (OmniFocus web no tiene modo oscuro nativo:
+ * ignora prefers-color-scheme, siempre renderiza claro — por eso lo invertimos.)
+ *
+ * CLAVE DE LA TÉCNICA: como TODO está invertido, para que algo se vea OSCURO hay
+ * que darle un color CLARO (el invert lo oscurece). Por eso el fondo de la página
+ * es #fff (se invierte a casi-negro) y el scrollbar se pinta con valores claros.
+ * Y color-scheme es 'light' (no 'dark'): así el navegador pinta los controles de
+ * formulario claros y la inversión los lleva a oscuro.
+ *
+ * PRIVACIDAD
+ * ----------
+ * Stylus es un gestor de CSS: no ejecuta JavaScript. Este estilo es incapaz de
+ * hacer red o de leer tus tareas. La garantía es estructural, no una promesa.
+ *
+ * AJUSTES
+ * -------
+ * --of-darkness : cuánto se oscurece (1 = negro puro, más duro). Bajalo para un
+ *                 gris más suave. 0.88 → fondo #1f1f1f, calcado del de claude.ai
+ *                 (medido: #1f1e1e). El texto y el scrollbar acompañan.
+ * --of-warmth   : tibieza del fondo (sepia). 0 = gris neutro (como claude.ai).
+ *                 Subilo (~0.04) para un tono cálido; mucho tiñe también los colores.
+ * COUNTER_INVERT: la lista de selectores re-invertidos (el bloque de abajo). Si
+ *                 algún ícono/imagen queda en negativo, agregá o quitá un selector.
+ */
+
+
+:root {
+  /* 'light' a propósito: ver nota de arriba. */
+  color-scheme: light;
+
+  /* --- Ajustes principales --- */
+  --of-darkness: 0.88;     /* 0.85–1.0; 0.88 → fondo #1f1f1f, calcado del de claude.ai (#1f1e1e) */
+  --of-hue: 180deg;        /* rota el tono para preservar los colores */
+  --of-warmth: 0;          /* sepia: 0 = neutro (como claude.ai); subilo para tono cálido */
+}
+
+/* Inversión base + rotación de tono + tibieza. Fondo #fff → se invierte a
+   casi-negro (sin costuras con el contenido blanco de la app). */
+html {
+  filter: invert(var(--of-darkness)) hue-rotate(var(--of-hue)) sepia(var(--of-warmth));
+  background: #fff !important;
+}
+html,
+body {
+  background: #fff !important;
+}
+
+/* Scrollbars: el filtro SÍ invierte los scrollbars internos, así que los
+   pintamos con valores CLAROS para que queden oscuros. */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #fff;
+}
+::-webkit-scrollbar-thumb {
+  background: #b8b8b8;      /* → gris oscuro tras la inversión */
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+::-webkit-scrollbar-corner {
+  background: #fff;
+}
+
+/* Contra-inversión: imágenes, video e íconos vuelven a su color normal */
+img,
+video,
+svg,
+canvas,
+picture,
+[style*="background-image"],
+[class*="avatar"],
+[class*="Avatar"] {
+  filter: invert(var(--of-darkness)) hue-rotate(var(--of-hue));
+}
+

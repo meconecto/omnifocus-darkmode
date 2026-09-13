@@ -6,7 +6,7 @@ OmniFocus for the Web has no native dark mode (it ignores `prefers-color-scheme`
 
 ## Why Stylus (and not a generic dark-mode extension)
 
-This is **CSS only**. Stylus is a *style* manager: it **does not run JavaScript**, so the style has no network capability and **cannot read or exfiltrate your tasks** — the guarantee is structural, not a promise. Stylus is also open source (GPLv3) and was created as a telemetry-free fork of "Stylish". For sensitive data like your tasks, it's the most defensible option. All the code lives here, versioned and auditable.
+This is **CSS only**. Stylus is a *style* manager: it **does not run JavaScript**, so the style has no network capability and **cannot read or exfiltrate your tasks** — the guarantee is structural, not a promise. Stylus is also open source (GPLv3) and was created as a telemetry-free fork of "Stylish". For sensitive data like your tasks, it's the most defensible option. All the code lives here, versioned and auditable. The optional unpacked Chromium extension in `extension/` is the same CSS with no JavaScript — not a generic dark-mode tool.
 
 ## Installation
 
@@ -19,7 +19,21 @@ This is **CSS only**. Stylus is a *style* manager: it **does not run JavaScript*
 
 **Manual alternative (no auto-update):** in the Stylus dashboard → **"Write new style"** → paste the contents of [`omnifocus-dark.user.css`](omnifocus-dark.user.css) → **Save**.
 
-> **Note on Brave/Chrome (Manifest V3):** since Chromium removed Manifest V2, the stable build of the Violentmonkey *userscript* manager no longer installs on Brave. Stylus is unaffected — it has a Manifest V3 build in the Chrome Web Store and installs cleanly.
+### Local Chrome / Brave extension (optional, no Stylus)
+
+Same CSS, no JavaScript: a Manifest V3 unpacked extension in [`extension/`](extension/). Stylus remains the primary install path (auto-update). Do **not** enable both at once — the page would be inverted twice.
+
+1. Clone this repo (or download the `extension/` folder together with its generated CSS).
+2. Open `chrome://extensions` or `brave://extensions`.
+3. Turn on **Developer mode**.
+4. **Load unpacked** → select the `extension/` directory.
+5. Open <https://web.omnifocus.com/>.
+
+Chrome will still warn that the extension can "read and change your data" on that site: the browser does not distinguish CSS-only injection. The package has no `.js`, no background worker, and no extra permissions — that is the actual guarantee, same idea as Stylus. After pulling CSS changes, run `bash scripts/sincronizar-extension.sh` and click **Reload** on the extension card.
+
+Edit `--of-darkness` / `--of-warmth` in [`omnifocus-dark.user.css`](omnifocus-dark.user.css), then regenerate; do not edit `extension/omnifocus-dark.css` by hand.
+
+> **Note on Brave/Chrome (Manifest V3):** since Chromium removed Manifest V2, the stable build of the Violentmonkey *userscript* manager no longer installs on Brave. Stylus is unaffected — it has a Manifest V3 build in the Chrome Web Store and installs cleanly. The unpacked extension above is a CSS-only adapter, not a userscript.
 
 ## How it works
 

@@ -1,6 +1,6 @@
 # omnifocus-darkmode
 
-Modo oscuro para OmniFocus for the Web, como userstyle de Stylus: un único archivo CSS.
+Modo oscuro para OmniFocus for the Web: userstyle Stylus (un CSS) y adaptador Chromium local sin JS.
 
 <!-- verify: scripts/verificar-repo.cmd -->
 
@@ -10,16 +10,17 @@ Modo oscuro para OmniFocus for the Web, como userstyle de Stylus: un único arch
 |---|---|---|
 | Stylus | — | El gestor de estilos (openstyles, GPLv3). **No es Stylish**, el original con telemetría. La diferencia es el argumento central del proyecto. |
 | userstyle | `omnifocus-dark.user.css` | CSS que aplica Stylus. **No es un userscript** (Violentmonkey/Tampermonkey), aunque el sufijo `.user.css` se le parezca. El repo fue userscript hasta el 2026-07-09. |
+| extensión local | `extension/` | Manifest V3 que inyecta el mismo CSS. Sin JavaScript. No reemplaza a Stylus. |
 
 ## Invariantes
 
-No hay ninguno impuesto por un mecanismo: el repositorio no tiene tests, tipos ni linters.
+No hay ninguno impuesto por un mecanismo de CSS: el repositorio no tiene tests, tipos ni linters.
 Los cinco están en [docs/invariantes.md](docs/invariantes.md); acá van los tres que rompen
-el producto en silencio.
+el producto en silencio. `verificar-repo.sh` sí rechaza `.js` en el repo.
 
-### No automatizados
+### Alto riesgo
 
-- Regla: **solo CSS, nunca JavaScript** · Riesgo: alto · Automatizar en: sin plan
+- Regla: **solo CSS, nunca JavaScript** · Riesgo: alto · Automatizar en: verificar-repo (que no haya `.js`)
 - Regla: **todo está invertido — para que algo se vea oscuro hay que darle un color CLARO**
   · Riesgo: alto · Automatizar en: sin plan
 - Regla: **`color-scheme: light` es deliberado**, no un error a corregir · Riesgo: alto ·

@@ -2,10 +2,11 @@
 
 Reglas que se pueden violar sin que nada falle y sin que nadie se entere.
 
-**Ninguna está automatizada.** El repositorio no tiene tests, tipos ni linters, y el
-resultado —cómo se ve la página— no es verificable por máquina. La única red es esta
-lista. Los tres primeros están en `AGENTS.md`; los cinco se registraron el 2026-08-09 al
-adoptar la estructura, a partir del código y del historial.
+El resultado visual no es verificable por máquina: el repositorio no tiene tests, tipos
+ni linters de CSS. `verificar-repo.sh` sí rechaza archivos `.js` y un manifest de
+extensión con JS o permisos extra (invariante 1, recorte estructural). El resto no tiene
+red automática. Los tres primeros están en `AGENTS.md`; los cinco se registraron el
+2026-08-09 al adoptar la estructura, a partir del código y del historial.
 
 ---
 
@@ -18,10 +19,18 @@ Stylus es un gestor de estilos y no ejecuta JS. No es una promesa del autor ni u
 política que se pueda auditar leyendo el código. Agregar JavaScript —o migrar a un gestor
 que lo permita— no degrada la garantía: la elimina por completo.
 
-- Evidencia: `README.md:9`, `omnifocus-dark.user.css:30-33`.
+La extensión local de Chromium ([ADR 0004](decisiones/0004-extension-chromium-local-solo-css.md))
+cae bajo la misma regla: inyecta CSS desde el manifest, sin `.js`, sin `background` y sin
+`service_worker`. Un popup o un content script "mínimo" no es un arreglo: es el userscript
+que se eliminó en `06a9669`.
+
+- Evidencia: `README.md:9`, `omnifocus-dark.user.css:30-33`, `extension/manifest.json`.
 - Historia: el proyecto fue userscript hasta el commit `06a9669` (2026-07-09), que eliminó
   esa versión justamente por esto. Ver [ADR 0002](decisiones/0002-stylus-userstyle-solo-css.md).
 - Cómo se rompe en silencio: "para arreglar tal detalle alcanza con un pequeño script".
+- Qué sí está automatizado: `scripts/verificar-repo.sh` falla si aparece un `.js` o si el
+  manifest de la extensión declara JS, background o permisos extra. No cubre el resultado
+  visual.
 
 ## 2. Todo está invertido: para que algo se vea oscuro hay que darle un color CLARO
 
